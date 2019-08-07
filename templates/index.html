@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.mobile-1.4.5.css') }}">
+		<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/javascript">
+	$(document).on('mobileinit', function() {
+		$.mobile.defaultPageTransition = 'slide';
+	});
+</script>
+
+<script src="{{ url_for('static', filename='js/jquery.mobile-1.4.5.js') }}" ></script>
+
+
+
+<title>OCM Photo Contest</title>
+</head>
+<body>
+
+
+
+<!-- Start of first page -->
+<div data-role="page" id="menu">
+
+	<div data-role="header">
+		<h1>Photo Contest</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>I'm first in the source order so I'm shown as the page.</p>
+		<a href="#scan" class='ui-btn'>Scan</a>
+		<a href="#gallery" class='ui-btn' >Gallery</a>
+		 <a href="#setting"  class='ui-btn' >Setting</a>
+
+
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+
+
+<!-- Start of second page -->
+
+<div data-role="page" id="scan">
+
+
+
+	<div data-role="header">
+	<a href="#menu"    data-direction="reverse" class='ui-btn'><</a>
+
+		<h1>Upload</h1>
+
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
+
+	</div><!-- /content -->
+
+	<form action = "/uploader" method = "POST"
+	         enctype = "multipart/form-data">
+					 <input type="hidden" name="task" value="uploadPic">
+	         <input type = "file" name = "file" />
+	         <input type = "submit"/>
+	      </form>
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!-- Start of third page -->
+<div data-role="page" id="gallery">
+
+  <div data-role="panel" id="GalleryHelperPanel" data-position='right' >
+    <!-- panel content goes here -->
+	Sub Gallery panel content. e.g. add folder, etc
+</div><!-- /panel -->
+
+
+	<div data-role="header">
+
+	<a href="#menu"    data-direction="reverse" class='ui-btn'><</a>
+		<h1>My Uploaded Pics</h1>
+	<a href="#GalleryHelperPanel" data-direction="reverse" class='ui-btn'>+</a>
+
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Content page</p>
+		<a href="#subgallery" class='ui-btn'>sub gallery</a>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!-- Start of third page sub page-->
+<div data-role="page" id="subgallery">
+
+ <div data-role="panel" id="SubGalleryHelperPanel" data-position='right' >
+    <!-- panel content goes here -->
+	Sub Gallery panel content. e.g. delete or rename folder, etc
+</div><!-- /panel -->
+
+	<div data-role="header">
+	<a href="#gallery"    data-direction="reverse" class='ui-btn'><</a>
+		<h1>Sub gallery</h1>
+
+	<a href="#SubGalleryHelperPanel" data-direction="reverse" class='ui-btn'>+</a>
+
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Content page</p>
+
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!-- Start of 4th page -->
+<div data-role="page" id="setting">
+
+
+
+	<div data-role="header">
+	<a href="#menu"    data-direction="reverse" class='ui-btn'><</a>
+		<h1>Setting</h1>
+
+
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Setting...</p>
+		<p></p>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+</body>
+
+</html>
