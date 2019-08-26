@@ -12,6 +12,8 @@
 <script type="text/javascript">
 	$(document).on('mobileinit', function() {
 		$.mobile.defaultPageTransition = 'slide';
+
+
 	});
 </script>
 
@@ -29,20 +31,73 @@
 <div data-role="page" id="menu">
 
 	<div data-role="header">
+    Add OCM logo
 		<h1>Photo Contest</h1>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>I'm first in the source order so I'm shown as the page.</p>
-		<a href="#scan" class='ui-btn'>Scan</a>
+		<p>Welcome to join OCM Photo Contest!  Do you know you may win a prize while you are making friends in this gospel camp event?
+      Here is what you can do.
+     </p>
+
+     <li>Take some selfie pictures with your friends</li>
+     <li>Upload the pictures and tag your friends with fellowship and name</li>
+     *Tips: We only count the last 3 pictures you uploaded, so the more friends in your pictures, the higher chance to win.  5 people's names are allowed to enter in each picture.
+
+     <br>
+     <h3>Enter the last 5 digits of your phone numbers below</h3>
+
+
+       <input type="text" name="txtPhoneNumber">
+       <input id="btnPhoneNumber" type="button" value="Save" />
+
+       <script>
+       $(document).ready(function(){
+
+
+         if (typeof(Storage) !== "undefined") {
+           if (localStorage.PhoneNumber) {
+             $('input[name="txtPhoneNumber"]').val(localStorage.PhoneNumber);
+             //$('input[name="txtUserPhone"]').val(localStorage.PhoneNumber);
+
+           }
+           else {
+             $('input[name="txtPhoneNumber"]').val("XXXXX");
+           }
+         }
+
+
+         $('#btnPhoneNumber').click(function(){
+
+           if (typeof(Storage) !== "undefined") {
+
+             localStorage.PhoneNumber = $('input[name="txtPhoneNumber"]').val();
+
+             //$('input[name="txtUserPhone"]').val(localStorage.PhoneNumber);
+             alert("you can start to upload your pictures!")
+
+           }
+
+
+          });
+
+
+
+       });
+
+       </script>
+
+       <br><br>
+
+		<a href="#uploadpage" class='ui-btn'>Upload</a>
 		<a href="#gallery" class='ui-btn' >Gallery</a>
-		 <a href="#setting"  class='ui-btn' >Setting</a>
+		 <a href="#myPhotos"  class='ui-btn' >My Photos</a>
 
 
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed">
-		<h4>Page Footer</h4>
+		<h4>Page Footer - Refresh</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
 
@@ -52,7 +107,7 @@
 
 <!-- Start of second page -->
 
-<div data-role="page" id="scan">
+<div data-role="page" id="uploadpage">
 
 
 
@@ -64,16 +119,173 @@
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#form_img").submit(function(e){
+            e.preventDefault();
+            var formData = new FormData($("#form_img")[0]);
+
+            $.ajax({
+                url : $("#form_img").attr('action'),
+                type : 'POST',
+                data : formData,
+                contentType : false,
+                processData : false,
+                success: function(resp) {
+                    console.log(resp);
+                    $('input[name="txtTMPfile"]').val(resp.ofilename)
+                    $('input[name="txtpreviousFileNo"]').val(resp.opreviousFileNo)
+                    $('input[name="txtUploadTime"]').val(resp.ouploadtime)
+
+                    var m = document.getElementById("picPreview");
+                    m.src = "/imgtmp/" + resp.ofilename;
+
+
+
+
+                }
+            });
+        });
+    });
+
+    </script>
+
+          <div id="uploaderForm">
+           <form action = "/uploader" id="form_img" method = "POST"
+              enctype = "multipart/form-data">
+              <input type = "file" name = "file" onchange="onChangeOfPicBrowse()" />
+              <script type="text/javascript">
+
+                function onChangeOfPicBrowse() {
+                  $('input[name="form_img_submit"]').click();
+
+                }
+
+              </script>
+
+              <input type = "text" name="txtPhoneNumber"/><br>
+              <input type = "submit" name="form_img_submit" value="Upload"/>
+              <input type="hidden" name="browseStatus" value="default"/>
+           </form>
+
+           <script type="text/javascript">
+
+
+                      $(document).ready(function() {
+
+                        var x = document.getElementById("uploaderForm");
+
+                         x.style.display = "none";
+
+
+                       });
+
+            </script>
+
+         </div>
+
+
+           <div>
+                Picture review<br>
+                <img style="width: 95%"  src="{{ url_for('static', filename='imgs/uploadBox2.jpg') }}" id="picPreview" onclick="picPreviewClick()" ></img>
+                <script type="text/javascript">
+                  function picPreviewClick() {
+                    $('input[name="browseStatus"]').val("previewing")
+                    $('input[name="file"]').click();
+
+
+                  }
+
+                  function onChangeOfPicBrowse() {
+                    if(  $('input[name="browseStatus"]').val() == "previewing" ){
+                      $('input[name="form_img_submit"]').click();
+                    }
+
+
+                  }
+
+                </script>
+
+
+             <p>
+               Tag your friends with name and fellowship below.
+             </p>
+             <form action = "/uploaderSave" method = "POST" id="form_save"
+                enctype = "multipart/form-data">
+
+                <input type = "hidden" name="txtTMPfile"/>
+                <input type="hidden" name="txtpreviousFileNo"/>
+                <input type = "hidden" name="txtPhoneNumber"/>
+                <input type = "hidden" name="txtUploadTime"/><br>
+
+                <br>
+                <table>
+                  <tr><td>Fellowship</td><td>Name</td></tr>
+                  <tr><td><input type = "text" name="txtFellowship1"/></td>
+                    <td><input type = "text" name="txtTagName1"/></td></tr>
+
+                    <tr><td><input type = "text" name="txtFellowship2"/></td>
+                      <td><input type = "text" name="txtTagName2"/></td></tr>
+
+                      <tr><td><input type = "text" name="txtFellowship3"/></td>
+                        <td><input type = "text" name="txtTagName3"/></td></tr>
+
+                        <tr><td><input type = "text" name="txtFellowship4"/></td>
+                          <td><input type = "text" name="txtTagName4"/></td></tr>
+
+                          <tr><td><input type = "text" name="txtFellowship5"/></td>
+                            <td><input type = "text" name="txtTagName5"/></td></tr>
+
+                </table>
+
+
+                <input type = "submit" value="Tag!"  />
+
+                </form>
+
+                <script type="text/javascript">
+                default_preview_pic ="{{ url_for('static', filename='imgs/uploadBox2.jpg') }}"
+                $(document).ready(function() {
+                    $("#form_save").submit(function(e){
+
+                        e.preventDefault();
+                        var formData = new FormData($("#form_save")[0]);
+
+                        $.ajax({
+                            url : $("#form_save").attr('action'),
+                            type : 'POST',
+                            data : formData,
+                            contentType : false,
+                            processData : false,
+                            success: function(resp) {
+                                console.log(resp);
+
+                                for (i=1;i<6;i++) {
+                                  $('input[name="txtFellowship'+ i +'"]').val("")
+                                  $('input[name="txtTagName' + i + '"]').val("")
+
+                                }
+
+
+                                var m = document.getElementById("picPreview");
+                                m.src = default_preview_pic
+
+                                $('input[name="browseStatus"]').val("default")
+
+
+
+                            }
+                        });
+                    });
+                });
+
+                </script>
+
+           </div>
+           <br><br>
 
 	</div><!-- /content -->
-
-	<form action = "/uploader" method = "POST"
-	         enctype = "multipart/form-data">
-					 <input type="hidden" name="task" value="uploadPic">
-	         <input type = "file" name = "file" />
-	         <input type = "submit"/>
-	      </form>
 
 	<div data-role="footer" data-position="fixed">
 		<h4>Page Footer</h4>
@@ -92,13 +304,94 @@
 	<div data-role="header">
 
 	<a href="#menu"    data-direction="reverse" class='ui-btn'><</a>
-		<h1>My Uploaded Pics</h1>
-	<a href="#GalleryHelperPanel" data-direction="reverse" class='ui-btn'>+</a>
+		<h1>Gallery</h1>
+
+	<a href="" class='ui-btn' id="galleryRefresh" onclick="helper_galleryRefresh()">Refresh</a>
+  <script type="text/javascript">
+    function helper_galleryRefresh() {
+
+      $('input[name="form_galleryRefresh_submit"]').click();
+
+    }
+
+  </script>
+
+  <div id="div_galleryRefreshForm">
+   <form action = "/gallery" id="form_galleryRefresh" method = "POST"
+      enctype = "multipart/form-data">
+
+      <input type="hidden" name="refreshRange" value="20"/>
+
+      <input type = "submit" value="Refresh"  name="form_galleryRefresh_submit"  />
+
+   </form>
+
+   <script type="text/javascript">
+
+
+              $(document).ready(function() {
+
+                var x = document.getElementById("div_galleryRefreshForm");
+
+                 x.style.display = "none";
+
+
+               });
+
+    </script>
+
+ </div>
+
+  <script type="text/javascript">
+
+  $(document).ready(function() {
+      $("#form_galleryRefresh").submit(function(e){
+
+          e.preventDefault();
+          var formData = new FormData($("#form_galleryRefresh")[0]);
+
+          $.ajax({
+              url : $("#form_galleryRefresh").attr('action'),
+              type : 'POST',
+              data : formData,
+              contentType : false,
+              processData : false,
+              success: function(resp) {
+                  console.log(resp);
+
+                  image_html = ""
+
+                  for (i=0;i<resp.ogallerylist.length;i++) {
+                    var img_path = resp.ogallerylist[i]
+
+                    image_html += image_html + "<div id='galleryimgbox"+ i +"' ><img src='imgpre/" + img_path + "' id=g" + i + " /></div>"
+
+                  }
+
+
+
+                  var m_page = document.getElementById("images_page");
+                  m_page.innerHTML = image_html
+
+              }
+          });
+      });
+  });
+
+  </script>
+
 
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
 		<p>Content page</p>
+
+    <div id="images_page">
+
+    </div>
+
+
+
 		<a href="#subgallery" class='ui-btn'>sub gallery</a>
 	</div><!-- /content -->
 
@@ -136,19 +429,19 @@
 
 
 <!-- Start of 4th page -->
-<div data-role="page" id="setting">
+<div data-role="page" id="myPhotos">
 
 
 
 	<div data-role="header">
 	<a href="#menu"    data-direction="reverse" class='ui-btn'><</a>
-		<h1>Setting</h1>
+		<h1>myPhotos</h1>
 
 
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-		<p>Setting...</p>
+		<p>myPhotos...</p>
 		<p></p>
 	</div><!-- /content -->
 
