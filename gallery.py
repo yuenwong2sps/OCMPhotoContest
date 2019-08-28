@@ -31,7 +31,7 @@ class Gallery(object):
 
         #timestampnumber_phoneNumber_photonumber.jpg
 
-        folder_files = sorted(glob.glob(os.path.join(path,'*.*')), key=os.path.getmtime)
+        folder_files = sorted(glob.glob(os.path.join(path,'*.*')), key=os.path.getmtime, reverse=True)
 
 
         #assume current filelist is sorted since it is deque by uploaded pic

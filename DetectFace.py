@@ -13,7 +13,7 @@ faceCascade = cv2.CascadeClassifier(cascPath)
 
 W = 1000.
 
-preview_W = 100
+preview_W = 300
 
 def DetectNumOfFace(imagePath):
 

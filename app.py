@@ -58,7 +58,7 @@ def uploaderRequest():
         #funcWord = request.form['task']
 
 
-        if 'txtPhoneNumber' not in request.form:
+        if 'txtUploadPhoneNumber' not in request.form:
 
             flash('No user phone number')
             return redirect(request.url)
@@ -86,9 +86,9 @@ def uploaderRequest():
         timestamp_str = (str(currentDT.strftime("%Y%m%d%H%M%S"))+str(currentDT.microsecond))
 
         #tmp file name format: tmp_datetime_telNumber.JPG
-        tmpImageName = "tmp_" + timestamp_str + "_" + request.form['txtPhoneNumber'] + ext_tmpName
+        tmpImageName = "tmp_" + timestamp_str + "_" + request.form['txtUploadPhoneNumber'] + ext_tmpName
 
-        phoneNumberList = glob.glob(os.path.join(app.config['UPLOAD_FOLDER'], "*_" + request.form['txtPhoneNumber'] + "_*"))
+        phoneNumberList = glob.glob(os.path.join(app.config['UPLOAD_FOLDER'], "*_" + request.form['txtUploadPhoneNumber'] + "_*"))
 
         if file and allowed_file(tmpImageName):
             filename = secure_filename(tmpImageName)
